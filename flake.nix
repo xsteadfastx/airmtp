@@ -2,6 +2,7 @@
   description = "Wireless download from your MTP-enabled devices";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
   };
 
   outputs = { self, nixpkgs, ... }:
