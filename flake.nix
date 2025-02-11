@@ -1,25 +1,16 @@
 {
   description = "Wireless download from your MTP-enabled devices";
-  inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-compat.url = "https://flakehub.com/f/edolstra/flake-compat/1.tar.gz";
-  };
+  inputs = { nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable"; };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = inputs:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs {
+      pkgs = import inputs.nixpkgs {
         inherit system;
-        config = {
-          permittedInsecurePackages = [
-            "python-2.7.18.8"
-
-          ];
-        };
+        config = { permittedInsecurePackages = [ "python-2.7.18.8" ]; };
       };
-    in
-    rec {
-      packages.x86_64-linux.airmtp = pkgs.stdenv.mkDerivation rec {
+
+      airmtp = pkgs.stdenv.mkDerivation rec {
         name = "airmtp";
         src = ./.;
         dontUnpack = true;
@@ -34,8 +25,12 @@
           mkdir $out/opt/${name}/appdata
         '';
       };
+    in {
+      packages.x86_64-linux.airmtp = airmtp;
+      packages.x86_64-linux.default = airmtp;
 
-      packages.x86_64-linux.default = packages.x86_64-linux.airmtp;
+      devShells.x86_64-linux.default =
+        pkgs.mkShell { buildInputs = [ pkgs.python2 airmtp ]; };
     };
 }
 
