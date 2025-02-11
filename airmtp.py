@@ -456,7 +456,7 @@ def establishAppEnvironment():
 				g.appDataDir = os.path.join(applicationSupportDir, 'airmtp/appdata')
 	if not g.appDataDir:
 		# none of runtime-specific cases above selected an app data directory - use directory based off our app directory
-		g.appDataDir = os.path.join(g.appDir, "appdata")
+		g.appDataDir = os.path.join("/tmp", "airmtp-appdata")
 	# create our app-specific subdirectories if necessary
 	if not os.path.exists(g.appDataDir):
 		os.makedirs(g.appDataDir)
